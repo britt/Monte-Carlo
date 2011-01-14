@@ -50,9 +50,7 @@ describe MonteCarlo::Simulator do
       @simulator.tick
     end
     
-    it "revises metrics" do
-      pending
-    end
+    it "revises metrics"
     
     it "executes agent behaviors" do
       @generator.stub!(:generate)
@@ -76,6 +74,38 @@ describe MonteCarlo::Simulator do
       clock.should_receive(:tick).once
       @simulator.clock = clock
       @simulator.tick
+    end
+  end
+  
+  describe "creating an agent" do
+    before(:each) do
+      @world = mock('simulation world')
+      @simulator = MonteCarlo::Simulator.new(@world)
+      @simulator.logger.stub!(:log)
+    end
+    
+    it "should add create an agent and add it to the collection of agents for the simulation" do
+      @simulator.agents.should be_empty
+      @simulator.agent { |world, time| true }
+      
+      @simulator.agents.size.should == 1
+      @simulator.agents.first.should be_a_kind_of(MonteCarlo::Actor)
+    end
+  end
+  
+  describe "creating a generator" do
+    before(:each) do
+      @world = mock('simulation world')
+      @simulator = MonteCarlo::Simulator.new(@world)
+      @simulator.logger.stub!(:log)
+    end
+    
+    it "should add create an agent and add it to the collection of agents for the simulation" do
+      @simulator.generators.should be_empty
+      @simulator.generator { |world, time| true }
+      
+      @simulator.generators.size.should == 1
+      @simulator.generators.first.should be_a_kind_of(MonteCarlo::Generator)
     end
   end
 end

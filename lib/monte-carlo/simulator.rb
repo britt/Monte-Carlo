@@ -22,6 +22,14 @@ module MonteCarlo
       logger.log(world, time)
     end
     
+    def agent(&block)
+      self.agents << Actor.new(&block)
+    end
+    
+    def generator(&block)
+      self.generators << Generator.new(&block)
+    end
+    
     private
     
     class SimpleClock
@@ -35,8 +43,8 @@ module MonteCarlo
     end
     
     class Logger
-      def log(object)
-        puts object.inspect
+      def log(object, time)
+        puts "#{time}::: #{object.inspect}"
       end
     end
   end
