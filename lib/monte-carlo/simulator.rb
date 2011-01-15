@@ -33,7 +33,7 @@ module MonteCarlo
     
     class Logger
       def log(object)
-        puts object.inspect
+        puts object
       end
     end
   end

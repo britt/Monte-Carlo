@@ -7,8 +7,8 @@ module MonteCarlo
       @action = block
     end
     
-    def act(world, time)
-      @action.call(world, time)
+    def act(world)
+      @action.call(world)
     end
   end
 end

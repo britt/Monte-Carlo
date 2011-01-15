@@ -24,6 +24,10 @@ module MonteCarlo
       @current_events << Event.new(name, value, creator, current_time)
     end
     
+    def to_s
+      "#{current_time}::: #{current_events.inspect}"
+    end
+    
     private
     
     class SimpleClock

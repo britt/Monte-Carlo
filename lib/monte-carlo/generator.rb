@@ -2,8 +2,8 @@
 
 module MonteCarlo
   class Generator < Actor
-    def generate(world, time)
-      @action.call(world, time)
+    def generate(world)
+      @action.call(world)
     end
   end
 end
