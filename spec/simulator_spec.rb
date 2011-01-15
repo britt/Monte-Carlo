@@ -15,21 +15,13 @@ describe MonteCarlo::Simulator do
     it "should have agents" do
       @simulator.should respond_to(:agents)
     end
-    
-    it "should have a clock" do
-      @simulator.should respond_to(:clock)
-    end
-    
+        
     it "should have a logger" do
       @simulator.should respond_to(:logger)
     end
   end
     
-  describe "intialization" do
-    it "should use a simple clock if none is specified" do
-      MonteCarlo::Simulator.new(mock).clock.should be_a_kind_of(MonteCarlo::Simulator::SimpleClock)
-    end
-    
+  describe "intialization" do    
     it "should log to standard out if no logger is specified" do
       MonteCarlo::Simulator.new(mock).logger.should be_a_kind_of(MonteCarlo::Simulator::Logger)
     end
@@ -45,8 +37,10 @@ describe MonteCarlo::Simulator do
     end
     
     it "generates events" do
-      @generator.should_receive(:generate).once.with(@world, 0)
+      @generator.should_receive(:generate).once.with(@world)
       @agent.stub!(:act)
+      @world.stub!(:tick)
+      
       @simulator.tick
     end
     
@@ -54,15 +48,18 @@ describe MonteCarlo::Simulator do
     
     it "executes agent behaviors" do
       @generator.stub!(:generate)
-      @agent.should_receive(:act).once.with(@world, 0)
+      @agent.should_receive(:act).once.with(@world)
+      @world.stub!(:tick)
+      
       @simulator.tick
     end
     
     it "record results" do
       @generator.stub!(:generate)
       @agent.stub!(:act)
+      @world.stub!(:tick)
       logger = mock('expectant logger')
-      logger.should_receive(:log).once.with(@world, 0)
+      logger.should_receive(:log).once.with(@world)
       @simulator.logger = logger
       @simulator.tick
     end
@@ -70,9 +67,7 @@ describe MonteCarlo::Simulator do
     it "should move the clock forward one step" do
       @generator.stub!(:generate)
       @agent.stub!(:act)
-      clock = mock('expectant clock')
-      clock.should_receive(:tick).once
-      @simulator.clock = clock
+      @world.should_receive(:tick)
       @simulator.tick
     end
   end
@@ -86,7 +81,7 @@ describe MonteCarlo::Simulator do
     
     it "should add create an agent and add it to the collection of agents for the simulation" do
       @simulator.agents.should be_empty
-      @simulator.agent { |world, time| true }
+      @simulator.agent('An agent') { |world, time| true }
       
       @simulator.agents.size.should == 1
       @simulator.agents.first.should be_a_kind_of(MonteCarlo::Actor)
@@ -102,7 +97,7 @@ describe MonteCarlo::Simulator do
     
     it "should add create an agent and add it to the collection of agents for the simulation" do
       @simulator.generators.should be_empty
-      @simulator.generator { |world, time| true }
+      @simulator.generator('A Generator') { |world, time| true }
       
       @simulator.generators.size.should == 1
       @simulator.generators.first.should be_a_kind_of(MonteCarlo::Generator)

@@ -1,6 +1,9 @@
 module MonteCarlo
   class Actor
-    def initialize(&block)
+    attr_reader :name
+    
+    def initialize(name, &block)
+      @name = name
       @action = block
     end
     
