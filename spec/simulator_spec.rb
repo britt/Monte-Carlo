@@ -40,6 +40,7 @@ describe MonteCarlo::Simulator do
       @generator.should_receive(:generate).once.with(@world)
       @agent.stub!(:act)
       @world.stub!(:tick)
+      @world.stub!(:current_state)
       
       @simulator.tick
     end
@@ -50,6 +51,7 @@ describe MonteCarlo::Simulator do
       @generator.stub!(:generate)
       @agent.should_receive(:act).once.with(@world)
       @world.stub!(:tick)
+      @world.stub!(:current_state)
       
       @simulator.tick
     end
@@ -58,8 +60,10 @@ describe MonteCarlo::Simulator do
       @generator.stub!(:generate)
       @agent.stub!(:act)
       @world.stub!(:tick)
+      @world.should_receive(:current_state).once.and_return('current state')
+      
       logger = mock('expectant logger')
-      logger.should_receive(:log).once.with(@world)
+      logger.should_receive(:log).once.with('current state')
       @simulator.logger = logger
       @simulator.tick
     end
@@ -68,6 +72,8 @@ describe MonteCarlo::Simulator do
       @generator.stub!(:generate)
       @agent.stub!(:act)
       @world.should_receive(:tick)
+      @world.stub!(:current_state)
+      
       @simulator.tick
     end
   end
@@ -101,6 +107,30 @@ describe MonteCarlo::Simulator do
       
       @simulator.generators.size.should == 1
       @simulator.generators.first.should be_a_kind_of(MonteCarlo::Generator)
+    end
+  end
+  
+  describe "running a simulation" do
+    before(:each) do
+      @world = MonteCarlo::World.new
+      @world.stub!(:current_state)
+      @simulator = MonteCarlo::Simulator.new(@world)
+      @simulator.logger.stub!(:log)
+    end
+    
+    it "should log the simulation parameters when the run starts" do
+      logger = mock('expectant logger')
+      logger.should_receive(:log).once.with(@simulator).ordered
+      logger.should_receive(:log).once.with({:end => 5}).ordered
+      logger.should_receive(:log).with(nil).exactly(5).times
+      @simulator.logger = logger
+      
+      @simulator.run(:end => 5)
+    end
+    
+    it "should tick the clock until the end time given" do      
+      @simulator.run(:end => 5)
+      @world.current_time.should == 5
     end
   end
 end

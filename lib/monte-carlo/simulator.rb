@@ -11,14 +11,19 @@ module MonteCarlo
       self.logger = opts[:logger] || Logger.new
     end
     
-    def run
+    def run(opts = {})
+      logger.log(self)
+      logger.log(opts)
+      while(world.current_time < opts[:end]) do 
+        tick
+      end
     end
     
     def tick
       time = world.tick
       generators.each { |generator| generator.generate(world) }
       agents.each { |agent| agent.act(world) }
-      logger.log(world)
+      logger.log(world.current_state)
     end
     
     def agent(name, &block)
