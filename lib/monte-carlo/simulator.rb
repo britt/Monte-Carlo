@@ -13,7 +13,6 @@ module MonteCarlo
     
     def run(opts = {})
       logger.log(self)
-      logger.log(opts)
       while(world.current_time < opts[:end]) do 
         tick
       end

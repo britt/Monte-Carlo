@@ -121,7 +121,6 @@ describe MonteCarlo::Simulator do
     it "should log the simulation parameters when the run starts" do
       logger = mock('expectant logger')
       logger.should_receive(:log).once.with(@simulator).ordered
-      logger.should_receive(:log).once.with({:end => 5}).ordered
       logger.should_receive(:log).with(nil).exactly(5).times
       @simulator.logger = logger
       

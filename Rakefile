@@ -19,6 +19,9 @@ Jeweler::Tasks.new do |gem|
   gem.description = %Q{A Monte Carlo Simulation Toolkit}
   gem.email = "britt.v.crawford@gmail.com"
   gem.authors = ["Britt Crawford"]
+  gem.add_dependency 'activesupport', '2.3.10'
+  gem.add_dependency 'faker', '~> 0.9.4'
+  
   # Include your dependencies below. Runtime dependencies are required when using your gem,
   # and development dependencies are only needed for development (ie running rake tasks, tests, etc)
   #  gem.add_runtime_dependency 'jabber4r', '> 0.1'

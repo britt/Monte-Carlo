@@ -4,7 +4,7 @@ module MonteCarlo
   class World
     attr_reader :current_events, :history, :clock
     
-    def initialize(clock = false)
+    def initialize(clock = nil)
       @clock = clock || SimpleClock.new
       @current_events = []
       @history = {}
